@@ -14,10 +14,10 @@
 class CloudLearn < Formula
   desc "Local multi-cloud simulator (AWS/GCP/Azure) with real backends"
   homepage "https://github.com/sudhirkumarganti/cloud-learn"
-  url "https://github.com/sudhirkumarganti/cloud-learn/archive/refs/tags/v1.0.0.tar.gz"
-  sha256 "REPLACED_BY_RELEASE_WORKFLOW"
+  url "https://github.com/sudhirkumarganti/cloud-learn/archive/refs/tags/v0.1.0.tar.gz"
+  sha256 "523753b87ccc4809c6e2dbbc45fee7c9a9fc2d27703b5562a33d7cf83f88f8c9"
   license "MIT"
-  version "1.0.0"
+  version "0.1.0"
 
   depends_on "multipass" => :recommended
   depends_on "docker"    => :recommended
