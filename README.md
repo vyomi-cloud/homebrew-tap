@@ -1,32 +1,31 @@
 # Vyomi Homebrew Tap
 
-Homebrew formulae for Vyomi — local multi-cloud simulator (AWS / GCP / Azure).
+Homebrew formula + tap for [Vyomi](https://vyomi.cloud) — the local multi-cloud simulator appliance.
 
 ## Install
 
 ```bash
 brew tap vyomi-cloud/tap
-brew install cloud-learn
+brew install vyomi
 ```
 
-Then start the simulator:
+The legacy `cloud-learn` name continues to work via an alias:
 
 ```bash
-cloud-learn up
-open http://localhost:9000
+brew install cloud-learn   # same package as `brew install vyomi`
 ```
 
-## What you get
+Both invocations install the same binary, currently named `cloud-learn` (will be renamed to `vyomi` in a later release with a `cloud-learn` shim).
 
-| Command | What it does |
-|---|---|
-| `brew install cloud-learn` | Installs the launcher CLI |
-| `cloud-learn up` | Starts the Docker-based appliance (~30 s first time) |
-| `cloud-learn down` | Stops everything |
-| `cloud-learn status` | Shows running containers |
-| `cloud-learn upgrade` | Pulls the latest image |
+## After install
+
+```bash
+cloud-learn up                       # first run: boots Multipass VM + Docker stack inside (~5-10 min)
+open http://vyomi.local:9000         # URL printed by the launcher
+```
+
+See [vyomi.cloud/install](https://vyomi.cloud/install) for the full guide.
 
 ## Source
 
-The Formula is auto-bumped by [vyomi-cloud/appliance](https://github.com/vyomi-cloud/appliance)'s
-release workflow on every `v*.*.*` tag.
+The formula here is auto-bumped by [`vyomi-cloud/appliance`](https://github.com/vyomi-cloud/appliance)'s `.github/workflows/release.yml` on every `v*.*.*` tag. Direct edits to `Formula/vyomi.rb` get overwritten — change the [source-controlled template in the appliance repo](https://github.com/vyomi-cloud/appliance/blob/main/packaging/homebrew/Formula/vyomi.rb) instead.
