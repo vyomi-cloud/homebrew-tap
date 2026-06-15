@@ -14,10 +14,10 @@
 class CloudLearn < Formula
   desc "Local multi-cloud simulator (AWS/GCP/Azure) with real backends"
   homepage "https://github.com/sudhirkumarganti/cloud-learn"
-  url "https://github.com/sudhirkumarganti/cloud-learn/releases/download/v1.2.5/cloud-learn-1.2.5.tar.gz"
-  sha256 "eaa8fd73ab749c73a212d595eb6378740f104cdaba82ee60606546fe53f546cf"
+  url "https://github.com/vyomi-cloud/appliance/releases/download/v1.2.6-rc4/cloud-learn-1.2.6-rc4.tar.gz"
+  sha256 "601967dda5847245150c90851be161c3391ac4df58542768bc3589557522cf16"
   license "MIT"
-  version "1.2.5"
+  version "1.2.6-rc4"
 
   # Note: multipass and Docker Desktop ship as casks, not formulae, so we
   # can't `depends_on` them directly from a Formula. They're listed in
