@@ -2,10 +2,7 @@
 #
 # Tap install (recommended):
 #   brew tap vyomi-cloud/tap
-#   brew install vyomi
-#
-# Legacy alias (for users coming from CloudLearn):
-#   brew install cloud-learn   # resolved via Aliases/cloud-learn → vyomi
+#   brew install cloud-learn
 #
 # Direct install (no tap):
 #   brew install --HEAD https://github.com/vyomi-cloud/appliance.git
@@ -25,35 +22,50 @@ class Vyomi < Formula
   # Note: multipass and Docker Desktop ship as casks, not formulae, so we
   # can't `depends_on` them directly from a Formula. They're listed in
   # `caveats` instead — users install them via `brew install --cask`, OR
-  # `vyomi up` itself offers to install Multipass automatically on first
-  # launch (see maybe_install_multipass in scripts/cloud-learn).
+  # `cloud-learn up` itself offers to run `brew install --cask multipass`
+  # for them on first launch (see maybe_install_multipass in scripts/cloud-learn).
 
   def install
     # Ship the launcher + the appliance compose + the source the appliance VM
     # syncs in as /workspace/cloud-learn.
     libexec.install Dir["*"]
 
-    # Wrapper that sets CLOUD_LEARN_HOME and shells into the bundled launcher.
-    # NOTE for Phase 6: the binary name `cloud-learn` will be renamed to
-    # `vyomi` with a shim in a later release. Today both still ship as
-    # `cloud-learn` for backwards-compat with existing user muscle memory.
-    (bin/"cloud-learn").write <<~EOS
+    # ── Primary binary: vyomi ──────────────────────────────────────────────
+    # The actual command users should type going forward. Sets the launcher
+    # environment and shells into the bundled bash launcher.
+    (bin/"vyomi").write <<~EOS
       #!/usr/bin/env bash
       export CLOUD_LEARN_HOME="#{libexec}"
       export CLOUDLEARN_DISTRIBUTION_MODE="appliance"
       exec bash "#{libexec}/scripts/cloud-learn" "$@"
     EOS
+    chmod 0555, bin/"vyomi"
+
+    # ── Legacy shim: cloud-learn → vyomi with deprecation warning ──────────
+    # Existing muscle memory keeps working. The warning is brief (one line)
+    # and printed on every invocation by default, but can be suppressed via
+    # VYOMI_NO_DEPRECATION_WARN=1 for scripts that hit the shim often.
+    # Slated for removal in v3.0.
+    (bin/"cloud-learn").write <<~EOS
+      #!/usr/bin/env bash
+      if [ -z "$VYOMI_NO_DEPRECATION_WARN" ] && [ -t 2 ]; then
+        printf '\033[33mNote:\033[0m \033[2m`cloud-learn` is deprecated. Use `vyomi` instead. Suppress: VYOMI_NO_DEPRECATION_WARN=1\033[0m\n' >&2
+      fi
+      exec "#{bin}/vyomi" "$@"
+    EOS
     chmod 0555, bin/"cloud-learn"
 
-    # Bash + zsh completions (lightweight; just lists the subcommands)
-    (bash_completion/"cloud-learn").write <<~EOS
-      _cloud_learn() {
+    # ── Bash completion (for both invocations) ─────────────────────────────
+    completion = <<~EOS
+      _vyomi() {
         local cur="${COMP_WORDS[COMP_CWORD]}"
         local cmds="up down stop restart status doctor help"
         COMPREPLY=( $(compgen -W "$cmds" -- "$cur") )
       }
-      complete -F _cloud_learn cloud-learn
+      complete -F _vyomi vyomi
+      complete -F _vyomi cloud-learn
     EOS
+    (bash_completion/"vyomi").write completion
   end
 
   def caveats
@@ -62,25 +74,28 @@ class Vyomi < Formula
       and runs the full simulator stack (FastAPI + 8 real backends) inside.
 
       Prerequisites:
-        • Multipass         (auto-installed by `cloud-learn up` on first run,
-                             OR install manually: brew install --cask multipass)
-        • Docker            (runs INSIDE the VM, not on your Mac)
+        • Multipass         (brew install --cask multipass)
+        • Docker            (auto-installed inside the VM)
         • ~32 GB free disk  (VM image + container layers)
 
       Get started:
-        cloud-learn up                       # boots VM + simulator (5-10 min first run)
-        open http://vyomi.local:9000         # URL printed in the launcher banner
+        cloud-learn up                # boots VM + simulator (5-10 min first run)
+        open http://192.168.x.x:9000  # URL printed in the launcher banner
 
       Stop with:
         cloud-learn down
 
       Full docs:
-        https://vyomi.cloud/install
+        https://github.com/vyomi-cloud/appliance/blob/main/README.md
     EOS
   end
 
   test do
-    # `cloud-learn help` runs without needing Multipass or Docker present.
+    # Both invocations should work — vyomi as primary, cloud-learn as the
+    # back-compat shim. `help` runs without Multipass / Docker present.
+    assert_match "vyomi", shell_output("#{bin}/vyomi help 2>&1", 0)
+    # Shim should also work but prints the deprecation warning to stderr
+    # (which our shell_output capture includes when 2>&1).
     assert_match "cloud-learn", shell_output("#{bin}/cloud-learn help 2>&1", 0)
   end
 end
