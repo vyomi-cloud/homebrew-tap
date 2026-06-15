@@ -14,10 +14,10 @@
 class Vyomi < Formula
   desc "Local multi-cloud simulator (AWS/GCP/Azure) with real backends"
   homepage "https://vyomi.cloud"
-  url "https://github.com/vyomi-cloud/appliance/releases/download/v2.0.0/cloud-learn-2.0.0.tar.gz"
-  sha256 "78e513925957a42027ab3133367036ddaf453f09cdba6d18c7fbbfe9c1e809bb"
+  url "https://github.com/vyomi-cloud/appliance/releases/download/v2.0.1/cloud-learn-2.0.1.tar.gz"
+  sha256 "1d046e41c87399ec7021bf35a83dbfae7b4c4c68ffbabf91b3dcc865d56b8c8f"
   license :cannot_represent  # BSL 1.1 — not in SPDX simple form
-  version "2.0.0"
+  version "2.0.1"
 
   # Note: multipass and Docker Desktop ship as casks, not formulae, so we
   # can't `depends_on` them directly from a Formula. They're listed in
