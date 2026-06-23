@@ -15,7 +15,7 @@ class Vyomi < Formula
   desc "Local multi-cloud simulator (AWS/GCP/Azure) with real backends"
   homepage "https://vyomi.cloud"
   url "https://github.com/vyomi-cloud/appliance/releases/download/v2.1.0.2/cloud-learn-2.1.0.2.tar.gz"
-  sha256 "cd5dfd94e9b607dcca182a26a3d251519819af59135c4b57045594863857c8d1"
+  sha256 "1ed1ce3f4c3d129ca34e7d3500c56680450709ca89bbec17cc6de9cef1e67634"
   license :cannot_represent  # BSL 1.1 — not in SPDX simple form
   version "2.1.0.2"
 
