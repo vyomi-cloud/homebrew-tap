@@ -13,10 +13,10 @@
 class VyomiDocker < Formula
   desc "Vyomi (Docker) — Free/Lite/Pro: docker compose up, no Multipass"
   homepage "https://vyomi.cloud"
-  url "https://github.com/vyomi-cloud/appliance/releases/download/v2.8.0/cloud-learn-2.8.0.tar.gz"
-  sha256 "a9539f109262906380c5cebe4d753062757d748806f92e098e2ee5f5adb049b6"
+  url "https://github.com/vyomi-cloud/appliance/releases/download/v2.8.1/cloud-learn-2.8.1.tar.gz"
+  sha256 "96042eccfda057cd95e86dc2a5faa462ec93f4548646acef3a6e366d11e476cb"
   license :cannot_represent  # BSL 1.1 — not in SPDX simple form
-  version "2.8.0"
+  version "2.8.1"
 
   conflicts_with "cloud-learn", because: "both install a `vyomi` launcher"
 
