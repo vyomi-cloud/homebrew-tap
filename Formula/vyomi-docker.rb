@@ -13,12 +13,16 @@
 class VyomiDocker < Formula
   desc "Vyomi (Docker) — Free/Lite/Pro: docker compose up, no Multipass"
   homepage "https://vyomi.cloud"
-  url "https://github.com/vyomi-cloud/appliance/releases/download/v3.0.7/cloud-learn-3.0.7.tar.gz"
-  sha256 "90973a5fffbb39e2a3a63acd436cbc61c29d780a6379de59cdcae8440a1aba61"
+  url "https://github.com/vyomi-cloud/appliance/releases/download/v3.0.8/cloud-learn-3.0.8.tar.gz"
+  sha256 "82e2671d580bebdff4c6d0a609d2df77fd750283d9ccd52981ae38cbe3182401"
   license :cannot_represent  # BSL 1.1 — not in SPDX simple form
-  version "3.0.7"
+  version "3.0.8"
 
-  conflicts_with "cloud-learn", because: "both install a `vyomi` launcher"
+  # No `conflicts_with "cloud-learn"`: that name is an alias of the `vyomi`
+  # formula, and checking it makes Homebrew load a second formula from this
+  # third-party tap, which current Homebrew refuses ("untrusted tap") — so
+  # `brew install vyomi-cloud/tap/vyomi-docker` failed outright. Both formulas
+  # install bin/vyomi, so Homebrew still refuses to link one over the other.
 
   def install
     # Minimal: the thin Docker wrapper + the pull-only compose file. The
