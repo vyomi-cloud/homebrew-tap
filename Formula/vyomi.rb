@@ -14,10 +14,10 @@
 class Vyomi < Formula
   desc "Local multi-cloud simulator (AWS/GCP/Azure) with real backends"
   homepage "https://vyomi.cloud"
-  url "https://github.com/vyomi-cloud/appliance/releases/download/v3.0.19/cloud-learn-3.0.19.tar.gz"
-  sha256 "bf9bb8d77002f09fcc2b5571183ad8d7957657a68a41062fe7e63407b1491505"
+  url "https://github.com/vyomi-cloud/appliance/releases/download/v3.0.20/cloud-learn-3.0.20.tar.gz"
+  sha256 "8371a397aa08f6345b80827e387e8579a44c55a7067b37f1e97828561175b2fc"
   license :cannot_represent  # BSL 1.1 — not in SPDX simple form
-  version "3.0.19"
+  version "3.0.20"
 
   # v2.0.1 — the launcher uses socat to forward 127.0.0.1:{9000,9443} →
   # VM_IP:{9000,9443} so users always hit https://localhost:9443/ (which
