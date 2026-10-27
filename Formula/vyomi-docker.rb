@@ -13,10 +13,10 @@
 class VyomiDocker < Formula
   desc "Vyomi (Docker) — Free/Lite/Pro: docker compose up, no Multipass"
   homepage "https://vyomi.cloud"
-  url "https://github.com/vyomi-cloud/appliance/releases/download/v3.0.8/cloud-learn-3.0.8.tar.gz"
-  sha256 "82e2671d580bebdff4c6d0a609d2df77fd750283d9ccd52981ae38cbe3182401"
+  url "https://github.com/vyomi-cloud/appliance/releases/download/v3.0.9/cloud-learn-3.0.9.tar.gz"
+  sha256 "18d1a9e89ba62491da5d763faf3fc63b5dc70b6e7cee12a65b198ea9b59fa69f"
   license :cannot_represent  # BSL 1.1 — not in SPDX simple form
-  version "3.0.8"
+  version "3.0.9"
 
   # No `conflicts_with "cloud-learn"`: that name is an alias of the `vyomi`
   # formula, and checking it makes Homebrew load a second formula from this
