@@ -5,7 +5,7 @@
 #   brew tap vyomi-cloud/tap
 #   brew install vyomi-docker
 #
-# For real VMs (Max tier) use the `cloud-learn` formula instead — the two
+# For real VMs (Max tier) use the `vyomi` formula instead — the two
 # conflict (both install a `vyomi` binary).
 #
 # Auto-updated by .github/workflows/release.yml (url + sha256 + version bumped
@@ -13,10 +13,10 @@
 class VyomiDocker < Formula
   desc "Vyomi (Docker) — Free/Lite/Pro: docker compose up, no Multipass"
   homepage "https://vyomi.cloud"
-  url "https://github.com/vyomi-cloud/appliance/releases/download/v3.0.32/cloud-learn-3.0.32.tar.gz"
-  sha256 "24e52bfa711d624ef9167827d416ea01b626c1b5bc2130e6e50bb8b01ebfe036"
+  url "https://github.com/vyomi-cloud/appliance/releases/download/v3.0.33/vyomi-3.0.33.tar.gz"
+  sha256 "871848cd063e113005ecdb3eca2b58d44975acf9f9faba7f42a2f861274668af"
   license :cannot_represent  # BSL 1.1 — not in SPDX simple form
-  version "3.0.32"
+  version "3.0.33"
 
   # No `conflicts_with "cloud-learn"`: that name is an alias of the `vyomi`
   # formula, and checking it makes Homebrew load a second formula from this
@@ -42,7 +42,7 @@ class VyomiDocker < Formula
         vyomi down
 
       Free/Lite = full API/SDK conformance (no compute); Pro unlocks EC2-on-Docker
-      with SSH. For real VMs (Max tier), use the `cloud-learn` formula.
+      with SSH. For real VMs (Max tier), use the `vyomi` formula.
     EOS
   end
 

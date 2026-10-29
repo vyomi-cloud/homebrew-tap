@@ -2,7 +2,7 @@
 #
 # Tap install (recommended):
 #   brew tap vyomi-cloud/tap
-#   brew install cloud-learn
+#   brew install vyomi-cloud/tap/vyomi
 #
 # Direct install (no tap):
 #   brew install --HEAD https://github.com/vyomi-cloud/appliance.git
@@ -14,10 +14,10 @@
 class Vyomi < Formula
   desc "Local multi-cloud simulator (AWS/GCP/Azure) with real backends"
   homepage "https://vyomi.cloud"
-  url "https://github.com/vyomi-cloud/appliance/releases/download/v3.0.32/cloud-learn-3.0.32.tar.gz"
-  sha256 "24e52bfa711d624ef9167827d416ea01b626c1b5bc2130e6e50bb8b01ebfe036"
+  url "https://github.com/vyomi-cloud/appliance/releases/download/v3.0.33/vyomi-3.0.33.tar.gz"
+  sha256 "871848cd063e113005ecdb3eca2b58d44975acf9f9faba7f42a2f861274668af"
   license :cannot_represent  # BSL 1.1 — not in SPDX simple form
-  version "3.0.32"
+  version "3.0.33"
 
   # v2.0.1 — the launcher uses socat to forward 127.0.0.1:{9000,9443} →
   # VM_IP:{9000,9443} so users always hit https://localhost:9443/ (which
@@ -79,6 +79,35 @@ class Vyomi < Formula
       complete -F _vyomi cloud-learn
     EOS
     (bash_completion/"vyomi").write completion
+  end
+
+  # ── Install-funnel phone-home ───────────────────────────────────────────
+  # Fires a single anonymous POST to https://vyomi.cloud/api/install/register
+  # marking this install as DOWNLOADED state, channel=brew. The portal
+  # later upgrades the same install_id to INSTALLED on first `vyomi up`,
+  # so we can measure brew→activation conversion.
+  #
+  # No PII: just install_id (random 16-char hex, persisted at
+  # ~/.vyomi/install_id), version, host_os, channel.
+  #
+  # Opt-out: HOMEBREW_NO_ANALYTICS or VYOMI_NO_TELEMETRY env vars suppress
+  # the call. Fail-soft — a network error never breaks `brew install`.
+  def post_install
+    # Honour brew's standard telemetry opt-out as well as ours.
+    return if ENV["HOMEBREW_NO_ANALYTICS"].to_s != "" && ENV["HOMEBREW_NO_ANALYTICS"] != "0"
+    return if ENV["VYOMI_NO_TELEMETRY"].to_s != "" && ENV["VYOMI_NO_TELEMETRY"] != "0"
+    script = "#{libexec}/packaging/common/phone-home.sh"
+    return unless File.executable?(script)
+    # `system` returns false on non-zero; we ignore the return value because
+    # telemetry failures must never propagate. 4s wall-clock cap: 3s curl
+    # timeout + ~1s for the rest.
+    Process.fork do
+      ENV["VYOMI_VERSION"] = version.to_s
+      exec("/bin/sh", script, "brew")
+    end
+  rescue StandardError
+    # Swallow anything (no curl, no /bin/sh, no fork) — telemetry is
+    # strictly best-effort.
   end
 
   def caveats
