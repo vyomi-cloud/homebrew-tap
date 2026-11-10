@@ -13,10 +13,10 @@
 class VyomiDocker < Formula
   desc "Vyomi (Docker) — Free/Lite/Pro: docker compose up, no Multipass"
   homepage "https://vyomi.cloud"
-  url "https://github.com/vyomi-cloud/appliance/releases/download/v3.0.45/vyomi-3.0.45.tar.gz"
-  sha256 "81564f0bee5e5afe6eb86d5161eb28d6ba3bdce46b727c96e36d4af0c04aaac1"
+  url "https://github.com/vyomi-cloud/appliance/releases/download/v3.0.46/vyomi-3.0.46.tar.gz"
+  sha256 "71088597676ec14a6c76a0025706e4ab543881f12c5a4bc15f77239a70e5e816"
   license :cannot_represent  # BSL 1.1 — not in SPDX simple form
-  version "3.0.45"
+  version "3.0.46"
 
   # No `conflicts_with "cloud-learn"`: that name is an alias of the `vyomi`
   # formula, and checking it makes Homebrew load a second formula from this
@@ -30,6 +30,10 @@ class VyomiDocker < Formula
     # share/ layout works without extra config.
     bin.install "packaging/docker/vyomi" => "vyomi"
     (share/"vyomi-docker").install "docker-compose.cloudlite.yml"
+    # `vyomi mcp` (MCP server for AI coding agents): compiled per OS/arch by
+    # release.yml into packaging/docker/mcp/<os>-<arch>/vyomi-mcp. The wrapper
+    # picks the right one at runtime. Absent from tarballs older than v3.0.46.
+    (share/"vyomi-docker").install "packaging/docker/mcp" if File.directory?("packaging/docker/mcp")
   end
 
   def caveats
@@ -40,6 +44,9 @@ class VyomiDocker < Formula
       Then:
         vyomi up      # docker compose up → http://localhost:9000
         vyomi down
+
+      AI coding agents (Claude Code):
+        claude mcp add --scope user vyomi -- vyomi mcp
 
       Free/Lite = full API/SDK conformance (no compute); Pro unlocks EC2-on-Docker
       with SSH. For real VMs (Max tier), use the `vyomi` formula.
