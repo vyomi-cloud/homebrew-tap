@@ -11,8 +11,8 @@
 class VyomiTunnel < Formula
   desc "Local reverse-tunnel to reach the in-browser Vyomi-Nano cloud sim from any SDK/CLI"
   homepage "https://vyomi.cloud"
-  url "https://registry.npmjs.org/vyomi-tunnel/-/vyomi-tunnel-1.2.5.tgz"
-  sha256 "6d3ceb02e2bbcf45b1ec812185bc64a1b2aeebf8df163f9f30b9cef776c17b4d"
+  url "https://registry.npmjs.org/vyomi-tunnel/-/vyomi-tunnel-1.3.0.tgz"
+  sha256 "74801d311925f7eda777eb792e128776df64260e9fedb6fb02baf3429f1cceeb"
   license "MIT"
 
   depends_on "node"
@@ -23,14 +23,13 @@ class VyomiTunnel < Formula
   end
 
   test do
-    port = free_port
-    pid = spawn({ "RELAY_PORT" => port.to_s }, bin/"vyomi-tunnel")
-    sleep 2
-    begin
-      out = shell_output("curl -s http://127.0.0.1:#{port}/health")
-      assert_match "\"relay\":\"vyomi-local\"", out
-    ensure
-      Process.kill("TERM", pid)
-    end
+    # The relay itself needs a Vyomi access key (gated since 1.2.x), which `brew test` does not have.
+    # Test what works without one: the version, and the bundled MCP server answering an initialize.
+    assert_match version.to_s, shell_output("#{bin}/vyomi-tunnel --version")
+    init = '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18",' \
+           '"capabilities":{},"clientInfo":{"name":"brew-test","version":"0"}}}'
+    out = pipe_output("#{bin}/vyomi-tunnel mcp 2>/dev/null", "#{init}\n")
+    assert_match "\"serverInfo\":{", out
+    assert_match "\"name\":\"vyomi\"", out
   end
 end
